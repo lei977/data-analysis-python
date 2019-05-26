@@ -13,9 +13,9 @@ X = rdm.rand(32, 2)
 # 从X这个32行2列的矩阵中 取出一行 判断如果和小于1 给Y赋值1 如果和不小于1 给Y赋值0
 # 作为输入数据集的标签（正确答案）
 Y_ = [[int(x0 + x1 < 1)] for (x0, x1) in X]
-print("X:\n", X)
+print("X:\n", X, type(X))
 
-print("Y_:\n", Y_)
+print("Y_:\n", Y_, type(Y_))
 
 # 1定义神经网络的输入、参数和输出,定义前向传播过程。
 x = tf.placeholder(tf.float32, shape=(None, 2))
@@ -54,3 +54,5 @@ with tf.Session() as sess:
     # 输出训练后的参数取值。
     print("w1:\n", sess.run(w1))
     print("w2:\n", sess.run(w2))
+
+    # yy=

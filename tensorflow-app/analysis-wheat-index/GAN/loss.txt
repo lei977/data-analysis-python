@@ -1,0 +1,2 @@
+[Fri May 17 10:05:01 2019]...Epoch 1/20...[ Discriminator Loss: 0.7360(Real: 0.0000 + Fake: 0.7360) ]...[ Generator Loss: 0.5884 ] 
+[Fri May 17 10:12:17 2019]...Epoch 1/20...[ Discriminator Loss: 0.6772(Real: 0.0000 + Fake: 0.6772) ]...[ Generator Loss: 0.6390 ] 
