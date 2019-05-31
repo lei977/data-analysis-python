@@ -1,6 +1,6 @@
 # coding:utf-8
 
-# GAN：生成器采用两层BP神经网络
+# GAN：生成器采用8层BP神经网络
 # 0导入模块，生成模拟数据集。
 import tensorflow as tf
 import numpy as np
@@ -79,11 +79,23 @@ BATCH_SIZE = 8
 x = tf.placeholder(tf.float32, shape=(None, 8))
 y_ = tf.placeholder(tf.float32, shape=(None, 2))
 
-w1 = tf.Variable(tf.random_normal([8, 10], stddev=1, seed=1))
-w2 = tf.Variable(tf.random_normal([10, 2], stddev=1, seed=1))
+w1 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w2 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w3 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w4 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w5 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w6 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w7 = tf.Variable(tf.random_normal([8, 8], stddev=1, seed=1))
+w8 = tf.Variable(tf.random_normal([8, 2], stddev=1, seed=1))
 
 a = tf.matmul(x, w1)
-y = tf.matmul(a, w2)
+b = tf.matmul(a, w2)
+c = tf.matmul(b, w3)
+d = tf.matmul(c, w4)
+e = tf.matmul(d, w5)
+f = tf.matmul(e, w6)
+g = tf.matmul(f, w7)
+y = tf.matmul(g, w8)
 
 # 2定义损失函数及反向传播方法。
 loss_mse = tf.reduce_mean(tf.square(y - y_))
@@ -110,8 +122,8 @@ with tf.Session() as sess:
             print("After %d training step(s), loss_mse on all data is %g" % (i, total_loss))
 
     # 输出训练后的参数取值。
-    print("w1:\n", sess.run(w1))
-    print("w2:\n", sess.run(w2))
+    # print("w1:\n", sess.run(w1))
+    # print("w2:\n", sess.run(w2))
 
     test_data = [[0.34, 0.25, 0.79, 0.255, 0.9, 0.544, 0.62, 0.54],
                  [0.4, 0.34, 0.75, 0.275, 0.92, 0.56, 0.53, 0.52],
@@ -123,8 +135,15 @@ with tf.Session() as sess:
                  [0.59, 0.52, 0.52, 0.41, 0.66, 0.56, 0.46, 0.74]]
 
     aa = tf.matmul(test_data, w1)
-    yy = tf.matmul(aa, w2)
-    print('判定值：', np.round(yy.eval()))
+    bb = tf.matmul(aa, w2)
+    cc = tf.matmul(bb, w3)
+    dd = tf.matmul(cc, w4)
+    ee = tf.matmul(dd, w5)
+    ff = tf.matmul(ee, w6)
+    gg = tf.matmul(ff, w7)
+    yy = tf.matmul(gg, w8)
+    print('判定值：')
+    print(np.round(yy.eval()))
 
     # 反向生成数据
     input_index = [[1, 1],
@@ -136,23 +155,32 @@ with tf.Session() as sess:
                    [3, 7],
                    [3, 8]]
 
+    input_index = np.array(input_index)
     # w1 = np.array(w1)
     # w2 = np.array(w2)
 
     ww1 = np.array(sess.run(w1))
     ww2 = np.array(sess.run(w2))
-    input_index = np.array(input_index)
+    ww3 = np.array(sess.run(w3))
+    ww4 = np.array(sess.run(w4))
+    ww5 = np.array(sess.run(w5))
+    ww6 = np.array(sess.run(w6))
+    ww7 = np.array(sess.run(w7))
+    ww8 = np.array(sess.run(w8))
 
-    print('np.linalg.pinv(ww2):', np.linalg.pinv(ww2))
+    temp1 = np.dot(input_index, np.linalg.pinv(ww8))
+    temp2 = np.dot(temp1, np.linalg.pinv(ww7))
+    temp3 = np.dot(temp2, np.linalg.pinv(ww6))
+    temp4 = np.dot(temp3, np.linalg.pinv(ww5))
+    temp5 = np.dot(temp4, np.linalg.pinv(ww4))
+    temp6 = np.dot(temp5, np.linalg.pinv(ww3))
+    temp7 = np.dot(temp6, np.linalg.pinv(ww2))
+    output_index = np.dot(temp7, np.linalg.pinv(ww1))
 
-    temp = np.dot(input_index, np.linalg.pinv(ww2))
-    print('temp:', temp)
-
-    print('type(temp):', type(temp))
-    print('type(np.linalg.pinv(ww1)):', type(np.linalg.pinv(ww1)))
-
-    output_index = np.dot(temp, np.linalg.pinv(ww1))
-
+    # print('temp:', temp)
+    # print('type(temp):', type(temp))
+    # print('type(np.linalg.pinv(ww1)):', type(np.linalg.pinv(ww1)))
+    # print('np.linalg.pinv(ww2):', np.linalg.pinv(ww2))
     print('output_index:')
     print(output_index)
 
